@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>StT - Teams Panel</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Header -->
+		<header id="header">
+			<a href="index.html" class="title">Login</a>
+			<nav>
+				<ul id="LinksList">
+				</ul>
+			</nav>
+			<script src="assets/js/jquery.min.js"></script>
+				<script>
+					$(document).ready(function(){
+						if(!localStorage.getItem('TeamsSort')){
+							localStorage.setItem('TeamsSort', "Score")
+							$("#TeamsList").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
+							
+						}
+						var stoken = sessionStorage.getItem('token')
+						if(!stoken){
+							var TokenStore = localStorage.getItem('token');
+							if(!TokenStore){
+								createHTML();
+								document.getElementById("logout").innerHTML = "Ausgeloged";
+							}else{
+								check(TokenStore).then(function(status) { //MUSS PROMISSE Wenn localStorage einen Token hat prüfen, wenn invalid login
+									if(status.status){
+										createHTML(status.rights)
+										document.getElementById("logout").innerHTML = "Ausloggen";
+									}else{
+										localStorage.removeItem('token');
+										createHTML();
+										document.getElementById("logout").innerHTML = "Ausgeloged";
+									}
+								});
+							}
+						}else{
+							check(stoken).then(function(status) { //MUSS PROMISSE Wenn sessionStorage einen Token hat prüfen, wenn invalid login
+								if(status.status){
+									createHTML(status.rights)
+									document.getElementById("logout").innerHTML = "Ausloggen";
+								}else{
+									sessionStorage.removeItem('token');
+									createHTML();
+									document.getElementById("logout").innerHTML = "Ausgeloged";
+								}
+							});
+						}
+
+						runEventAbfrage();
+
+						function runEventAbfrage() {
+							if(sessionStorage.getItem('token')){
+								var Token = sessionStorage.getItem('token')
+							}else if(localStorage.getItem('token')){
+								var Token = localStorage.getItem('token');
+							}else{
+								var Token = "No Token"
+							}
+							var posting = $.get("http://localhost:7500/api/v1/Teams/currentEvents", {
+								Token: Token
+							});
+								posting.done(function(data) {
+									console.log(data)
+									var TableString =``
+
+									data.eventlist.map(Events => {
+										let BothTimes = "";
+										Events.event_times.map(Time => {
+											BothTimes = `${BothTimes}<button type="button" id="SetEvent" onclick="SetEvent('${Time}')">${humanReadable(Time)}</button> `
+										});
+										TableString = `${TableString}${BothTimes}`
+									});
+
+									$("#EventSelector").html("<h2>Zukünftige Events</h2>" + TableString + "<br><br>");
+								});
+
+								posting.fail(function(err) {
+									if(err.status === 403){
+										$("#ClashScoreList").html("Nicht genügend Rechte!");
+										$('#ClashScoreList').addClass("highlight");
+										setTimeout(function () {
+											$('#ClashScoreList').removeClass('highlight');
+										}, 2000);
+									}else if(err.status === 503){
+										alert("Kritischer Fehler!")
+									}
+								});
+		
+						}
+
+						function humanReadable(time) {
+							let JStime = new Date(time*1000);
+							return JStime.toLocaleString().slice(0, -6) + " Uhr";;
+							
+						}
+
+						//Functions for Check Permissions and create Header
+						function check(Token) {
+							return new Promise(function(resolve, reject) {
+								var posting = $.post("http://localhost:7500/api/v1/Login/check", {
+									Token: Token
+								});
+								posting.done(function(data) {
+									resolve({status: true, loginname: data.loginname, rights: data.rights});
+								});
+								posting.fail(function(err) {
+									resolve({status: false});
+								});
+		
+							});
+						}
+		
+						function createHTML(rights) {
+							var HeaderHTML = "";
+								HeaderHTML += `<li><a href="index.html">Login</a></li>`
+								if(rights){
+									if(rights.includes("TeamRead")){ HeaderHTML += `<li><a href="Teams.html" class="active">Teams</a></li>` }
+									if(rights.includes("TrustRead")){ HeaderHTML += `<li><a href="TrustFactor.html">Clashscore</a></li>` }
+									if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
+								}
+								HeaderHTML += `<li><p id="logout" onclick="logout()">Ausloggen</p></li>`
+							$("#LinksList").html(HeaderHTML);
+						}
+					});
+				</script>
+				<script>
+					function logout() {
+						var stoken = sessionStorage.getItem('token')
+						if(!stoken){
+							var TokenStore = localStorage.getItem('token');
+							if(!TokenStore){
+								document.getElementById("logout").innerHTML = "Ausgeloged";
+							}else{
+								Requestlogout(TokenStore).then(function(status) { //MUSS PROMISSE Wenn localStorage einen Token hat prüfen, wenn invalid login
+									if(status.status){
+										document.getElementById("logout").innerHTML = "Ausgeloged";
+										createHTML();
+										$('#result').html(`Bitte logge dich ein.`);
+									}else{
+										createHTML();
+										document.getElementById("logout").innerHTML = "Ausloggen";
+									}
+								});
+							}
+						}else{
+							Requestlogout(stoken).then(function(status) { //MUSS PROMISSE Wenn localStorage einen Token hat prüfen, wenn invalid login
+									if(status.status){
+										document.getElementById("logout").innerHTML = "Ausgeloged";
+										createHTML();
+										$('#result').html(`Bitte logge dich ein.`);
+									}else{
+										createHTML();
+										document.getElementById("logout").innerHTML = "Ausloggen";
+									}
+								});
+						}
+	
+						function Requestlogout(Token) {
+						return new Promise(function(resolve, reject) {
+							var posting = $.post("http://localhost:7500/api/v1/Login/logout", {
+								Token: Token
+							});
+							posting.done(function(data) {
+								resolve({status: true});
+							});
+							posting.fail(function(err) {
+								resolve({status: false});
+							});
+	
+						});
+						}
+	
+						function createHTML(rights) {
+							var HeaderHTML = "";
+								HeaderHTML += `<li><a href="index.html">Login</a></li>`
+								if(rights){
+									if(rights.includes("TeamRead")){ HeaderHTML += `<li><a href="Teams.html" class="active">Teams</a></li>` }
+									if(rights.includes("TrustRead")){ HeaderHTML += `<li><a href="TrustFactor.html">Clashscore</a></li>` }
+									if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
+								}
+								HeaderHTML += `<li><p id="logout" onclick="logout()">Ausloggen</p></li>`
+							$("#LinksList").html(HeaderHTML);
+						}
+					}
+					</script>
+		</header>
+		<!-- Anmeldungsliste -->
+		<section id="Liste" class="wrapper style3 fade-up">
+			<div class="inner">
+				<div id="EventSelector"></div>
+				<h2 id="NoPermissions">Für Event angemeltet:</h2>
+				<div id="TeamsList"></div>
+			</div>
+		</section>
+
+		<!-- ZusammengestelltesTeam -->
+		<section id="Events" class="wrapper style1 fade-up">
+			<div class="inner">
+				<h2>Team:</h2>
+				<p>Liste der aktuellen Spielerauswahl</p>
+				<div id="TeamSpielerListe">
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer -->
+		<footer id="footer" class="wrapper style1-alt">
+			<div class="inner">
+				<ul class="menu">
+					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Creator: <a href="https://github.com/BolverBlitz">BolverBlitz</a></li><li>Projekt: <a href="https://github.com/EBG-PW/Endegs-AnlagenMonitor">Github</a></li><li>Impressum und Datenschutz: <a href="http://localhost:7500/lawstuff">Hier</a></li>
+				</ul>
+			</div>
+		</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script>
+				function SetEvent(time) {
+					localStorage.setItem('EventTime', time)
+					createEventPlayerList();
+				}
+
+				function createEventPlayerList() {
+					var EventTime = localStorage.getItem('EventTime')
+					if(sessionStorage.getItem('token')){
+						var Token = sessionStorage.getItem('token')
+					}else if(localStorage.getItem('token')){
+						var Token = localStorage.getItem('token');
+					}else{
+						var Token = "No Token"
+					}
+
+					var posting = $.get("http://localhost:7500/api/v1/Teams/EventMembers", {
+						Token: Token,
+						EventTime: EventTime
+					});
+					posting.done(function(data) {
+						console.log(data)
+						var TableString =``
+						/*
+						data.eventlist.map(Events => {
+							let BothTimes = "";
+							Events.event_times.map(Time => {
+								BothTimes = `${BothTimes}<button type="button" id="SetEvent" onclick="SetEvent('${Time}')">${humanReadable(Time)}</button> `
+							});
+							TableString = `${TableString}${BothTimes}`
+							
+						});
+						*/
+
+						//$("#EventSelector").html("<h2>Zukünftige Events</h2>" + TableString + "<br><br>");
+					});
+
+					posting.fail(function(err) {
+						if(err.status === 403){
+							$("#ClashScoreList").html("Nicht genügend Rechte!");
+							$('#ClashScoreList').addClass("highlight");
+							setTimeout(function () {
+								$('#ClashScoreList').removeClass('highlight');
+							}, 2000);
+						}else if(err.status === 503){
+							alert("Kritischer Fehler!")
+						}
+					});
+				}
+			</script>
+	</body>
+</html>

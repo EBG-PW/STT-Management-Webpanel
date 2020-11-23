@@ -1,0 +1,395 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>StT - Clashscore Panel</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Header -->
+		<header id="header">
+			<a href="index.html" class="title">Clashscore</a>
+			<nav>
+				<ul id="LinksList">
+				</ul>
+			</nav>
+			<script src="assets/js/jquery.min.js"></script>
+				<script>
+					$(document).ready(function(){
+						if(!localStorage.getItem('TrustFactorSort')){
+							localStorage.setItem('TrustFactorSort', "Score")
+							$("#ClashScoreList").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
+							
+						}
+
+						var stoken = sessionStorage.getItem('token')
+						if(!stoken){
+							var TokenStore = localStorage.getItem('token');
+							if(!TokenStore){
+								createHTML();
+								document.getElementById("logout").innerHTML = "Ausgeloged";
+							}else{
+								check(TokenStore).then(function(status) { //MUSS PROMISSE Wenn localStorage einen Token hat prüfen, wenn invalid login
+									if(status.status){
+										createHTML(status.rights)
+										document.getElementById("logout").innerHTML = "Ausloggen";
+									}else{
+										localStorage.removeItem('token');
+										createHTML();
+										document.getElementById("logout").innerHTML = "Ausgeloged";
+									}
+								});
+							}
+						}else{
+							check(stoken).then(function(status) { //MUSS PROMISSE Wenn sessionStorage einen Token hat prüfen, wenn invalid login
+								if(status.status){
+									createHTML(status.rights)
+									document.getElementById("logout").innerHTML = "Ausloggen";
+								}else{
+									sessionStorage.removeItem('token');
+									createHTML();
+									document.getElementById("logout").innerHTML = "Ausgeloged";
+								}
+							});
+						}
+
+						getList();
+
+						//Functions for memberlist display on padge loading
+						function getList() {
+							if(sessionStorage.getItem('token')){
+								var Token = sessionStorage.getItem('token')
+							}else if(localStorage.getItem('token')){
+								var Token = localStorage.getItem('token');
+							}else{
+								var Token = "No Token"
+							}
+							var posting = $.get("http://localhost:7500/api/v1/TrustFactor/getList", {
+									Token: Token
+								});
+								posting.done(function(data) {
+									var TableHead = `<thead><tr><th>Picture</th><th>Name</th><th>Username</th></th><th>Trustfactor</th><th>Aktions</th></tr></thead>`
+									var TableString =`<div class="table-wrapper"><table>${TableHead}`
+									var TableEnd = `</table></div>`;
+									
+									if(localStorage.getItem('TrustFactorSort') === "Score"){
+									data.memberlist.sort((a, b) => (a.trustfactor > b.trustfactor) ? -1 : 1)
+									$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
+								}else{
+									data.memberlist.sort(function(a, b){
+										var nameA=a.username.toLowerCase(), nameB=b.username.toLowerCase();
+										if (nameA < nameB) //sort string ascending
+										return -1;
+										if (nameA > nameB)
+										return 1;
+										return 0; //default return value (no sorting)
+									});
+									$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Alphabetisch</button>`);
+								}
+
+									data.memberlist.map(Member => {
+										Member.discord_id = `n${Member.discord_id}`
+										TableString = `${TableString}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.firstname}</td><td>${Member.username}</td><td>${Member.trustfactor}</td><td><button2 type="button" id="plusdrei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 3})">+3</button2> <button2 type="button" id="pluszwei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 2})">+2</button2> <button2 type="button" id="pluseins" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 1})">+1</button2> | <button2 type="button" id="minuseins" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -1})">-1</button2> <button2 type="button" id="minuszwei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -2})">-2</button2> <button2 type="button" id="minusdrei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -3})">-3</button2></td></tr></tbody>`
+									});
+									TableString = TableString + TableEnd
+									$("#ClashScoreList").html(TableString);
+								});
+								posting.fail(function(err) {
+									if(err.status === 403){
+										$("#ClashScoreList").html("Nicht genügend Rechte!");
+										$('#ClashScoreList').addClass("highlight");
+										setTimeout(function () {
+											$('#ClashScoreList').removeClass('highlight');
+										}, 2000);
+									}else if(err.status === 503){
+										alert("Kritischer Fehler!")
+									}
+								});
+		
+						}
+
+						//Functions for Check Permissions and create Header
+						function check(Token) {
+							return new Promise(function(resolve, reject) {
+								var posting = $.post("http://localhost:7500/api/v1/Login/check", {
+									Token: Token
+								});
+								posting.done(function(data) {
+									resolve({status: true, loginname: data.loginname, rights: data.rights});
+								});
+								posting.fail(function(err) {
+									resolve({status: false});
+								});
+		
+							});
+						}
+		
+						function createHTML(rights) {
+							var HeaderHTML = "";
+								HeaderHTML += `<li><a href="index.html">Login</a></li>`
+								if(rights){
+									if(rights.includes("TeamRead")){ HeaderHTML += `<li><a href="Teams.html">Teams</a></li>` }
+									if(rights.includes("TrustRead")){ HeaderHTML += `<li><a href="TrustFactor.html" class="active">Clashscore</a></li>` }
+									if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
+								}
+								HeaderHTML += `<li><p id="logout" onclick="logout()">Ausloggen</p></li>`
+							$("#LinksList").html(HeaderHTML);
+						}
+					});
+				</script>
+				<script>
+				function TrustChance(Input){
+					if(sessionStorage.getItem('token')){
+						var Token = sessionStorage.getItem('token')
+					}else if(localStorage.getItem('token')){
+						var Token = localStorage.getItem('token');
+					}else{
+						var Token = "No Token"
+					}
+					var posting = $.post("http://localhost:7500/api/v1/TrustFactor/modifyTrust", {
+						DiscordID: Input.DiscordID,
+						Value: Input.Value,
+						Token: Token
+					});
+					posting.done(function(data) {
+						getList()
+					});
+					posting.fail(function(err) {
+						if(err.status === 403){
+							$("#NoPermissions").html(`Du hast leider nicht genug Rechte um hier etwas zu verändern.`);
+							setTimeout(function () {
+								$("#NoPermissions").html(`Liste:`);
+							}, 4000);
+							window.scrollBy(0,-500000);
+							$('#NoPermissions').addClass("highlight");
+							setTimeout(function () {
+								$('#NoPermissions').removeClass('highlight');
+							}, 2000);
+						}else if(err.status === 429){
+							$("#NoPermissions").html(`Bitte warte einige Zeit, du hast dies zu oft gemacht!.`);
+							setTimeout(function () {
+								$("#NoPermissions").html(`Liste:`);
+							}, 4000);
+							window.scrollBy(0,-500000);
+							$('#NoPermissions').addClass("highlight");
+							setTimeout(function () {
+								$('#NoPermissions').removeClass('highlight');
+							}, 2000);
+						}else if(err.status === 503){
+							alert("Kritischer Fehler!")
+						}
+					});
+				}
+
+				function getList() {
+					if(sessionStorage.getItem('token')){
+								var Token = sessionStorage.getItem('token')
+							}else if(localStorage.getItem('token')){
+								var Token = localStorage.getItem('token');
+							}else{
+								var Token = "No Token"
+							}
+							var posting = $.get("http://localhost:7500/api/v1/TrustFactor/getList", {
+									Token: Token
+								});
+					posting.done(function(data) {
+						var TableHead = `<thead><tr><th>Picture</th><th>Name</th><th>Username</th></th><th>Trustfactor</th><th>Aktions</th></tr></thead>`
+						var TableString =`<div class="table-wrapper"><table>${TableHead}`
+						var TableEnd = `</table></div>`;
+
+						if(localStorage.getItem('TrustFactorSort') === "Score"){
+									data.memberlist.sort((a, b) => (a.trustfactor > b.trustfactor) ? -1 : 1)
+									$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
+								}else{
+									data.memberlist.sort(function(a, b){
+										var nameA=a.username.toLowerCase(), nameB=b.username.toLowerCase();
+										if (nameA < nameB) //sort string ascending
+										return -1;
+										if (nameA > nameB)
+										return 1;
+										return 0; //default return value (no sorting)
+									});
+									$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Alphabetisch</button>`);
+								}
+
+						data.memberlist.map(Member => {
+							Member.discord_id = `n${Member.discord_id}`
+							TableString = `${TableString}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.firstname}</td><td>${Member.username}</td><td>${Member.trustfactor}</td><td><button2 type="button" id="plusdrei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 3})">+3</button2> <button2 type="button" id="pluszwei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 2})">+2</button2> <button2 type="button" id="pluseins" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 1})">+1</button2> | <button2 type="button" id="minuseins" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -1})">-1</button2> <button2 type="button" id="minuszwei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -2})">-2</button2> <button2 type="button" id="minusdrei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -3})">-3</button2></td></tr></tbody>`
+						});
+						TableString = TableString + TableEnd
+						$("#ClashScoreList").html(TableString);
+					});
+					posting.fail(function(err) {
+						if(err.status === 403){
+							$("#ClashScoreList").html("Nicht genügend Rechte!");
+							$('#ClashScoreList').addClass("highlight");
+							setTimeout(function () {
+								$('#ClashScoreList').removeClass('highlight');
+							}, 2000);
+						}else if(err.status === 503){
+							alert("Kritischer Fehler!")
+						}
+					});
+		
+				}
+				</script>
+				<script>
+					function SortChance() {
+						if(localStorage.getItem('TrustFactorSort') === "Score"){
+							localStorage.setItem('TrustFactorSort', "Alphabetisch")
+							getList()
+							$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Alphabetisch</button>`);
+						}else{
+							localStorage.setItem('TrustFactorSort', "Score")
+							getList()
+							$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
+						}
+						
+						function getList() {
+							if(sessionStorage.getItem('token')){
+								var Token = sessionStorage.getItem('token')
+							}else if(localStorage.getItem('token')){
+								var Token = localStorage.getItem('token');
+							}else{
+								var Token = "No Token"
+							}
+							var posting = $.get("http://localhost:7500/api/v1/TrustFactor/getList", {
+									Token: Token
+								});
+							posting.done(function(data) {
+								var TableHead = `<thead><tr><th>Picture</th><th>Name</th><th>Username</th></th><th>Trustfactor</th><th>Aktions</th></tr></thead>`
+								var TableString =`<div class="table-wrapper"><table>${TableHead}`
+								var TableEnd = `</table></div>`;
+
+								if(localStorage.getItem('TrustFactorSort') === "Score"){
+									data.memberlist.sort((a, b) => (a.trustfactor > b.trustfactor) ? -1 : 1)
+									$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
+								}else{
+									data.memberlist.sort(function(a, b){
+										var nameA=a.username.toLowerCase(), nameB=b.username.toLowerCase();
+										if (nameA < nameB)
+										return -1;
+										if (nameA > nameB)
+										return 1;
+										return 0;
+									});
+									$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Alphabetisch</button>`);
+								}
+
+								data.memberlist.map(Member => {
+									Member.discord_id = `n${Member.discord_id}`
+									TableString = `${TableString}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.firstname}</td><td>${Member.username}</td><td>${Member.trustfactor}</td><td><button2 type="button" id="plusdrei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 3})">+3</button2> <button2 type="button" id="pluszwei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 2})">+2</button2> <button2 type="button" id="pluseins" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: 1})">+1</button2> | <button2 type="button" id="minuseins" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -1})">-1</button2> <button2 type="button" id="minuszwei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -2})">-2</button2> <button2 type="button" id="minusdrei" onclick="TrustChance({DiscordID: '${Member.discord_id}',Value: -3})">-3</button2></td></tr></tbody>`
+								});
+								TableString = TableString + TableEnd
+								$("#ClashScoreList").html(TableString);
+							});
+							posting.fail(function(err) {
+								if(err.status === 403){
+									$("#ClashScoreList").html("Nicht genügend Rechte!");
+									$('#ClashScoreList').addClass("highlight");
+									setTimeout(function () {
+										$('#ClashScoreList').removeClass('highlight');
+									}, 2000);
+								}else if(err.status === 503){
+									alert("Kritischer Fehler!")
+								}
+							});
+		
+						}
+					}
+				</script>
+				<script>
+					function logout() {
+						var stoken = sessionStorage.getItem('token')
+						if(!stoken){
+							var TokenStore = localStorage.getItem('token');
+							if(!TokenStore){
+								document.getElementById("logout").innerHTML = "Ausgeloged";
+							}else{
+								Requestlogout(TokenStore).then(function(status) { //MUSS PROMISSE Wenn localStorage einen Token hat prüfen, wenn invalid login
+									if(status.status){
+										document.getElementById("logout").innerHTML = "Ausgeloged";
+										createHTML();
+										$('#result').html(`Bitte logge dich ein.`);
+									}else{
+										createHTML();
+										document.getElementById("logout").innerHTML = "Ausloggen";
+									}
+								});
+							}
+						}else{
+							Requestlogout(stoken).then(function(status) { //MUSS PROMISSE Wenn localStorage einen Token hat prüfen, wenn invalid login
+									if(status.status){
+										document.getElementById("logout").innerHTML = "Ausgeloged";
+										createHTML();
+										$('#result').html(`Bitte logge dich ein.`);
+									}else{
+										createHTML();
+										document.getElementById("logout").innerHTML = "Ausloggen";
+									}
+								});
+						}
+	
+						function Requestlogout(Token) {
+						return new Promise(function(resolve, reject) {
+							var posting = $.post("http://localhost:7500/api/v1/Login/logout", {
+								Token: Token
+							});
+							posting.done(function(data) {
+								resolve({status: true});
+							});
+							posting.fail(function(err) {
+								resolve({status: false});
+							});
+	
+						});
+						}
+	
+						function createHTML(rights) {
+							var HeaderHTML = "";
+								HeaderHTML += `<li><a href="index.html">Login</a></li>`
+								if(rights){
+									if(rights.includes("TeamRead")){ HeaderHTML += `<li><a href="Teams.html">Teams</a></li>` }
+									if(rights.includes("TrustRead")){ HeaderHTML += `<li><a href="TrustFactor.html" class="active">Clashscore</a></li>` }
+									if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
+								}
+								HeaderHTML += `<li><p id="logout" onclick="logout()">Ausloggen</p></li>`
+							$("#LinksList").html(HeaderHTML);
+						}
+					}
+					</script>
+		</header>
+			<!-- Liste -->
+			<section id="Liste" class="wrapper style3 fade-up">
+				<div class="inner">
+					<h2 id="NoPermissions">Liste:</h2>
+					<div id="ClashScoreList"></div>
+					<div id="containerButton"></div>
+				</div>
+			</section>
+		<!-- Footer -->
+		<footer id="footer" class="wrapper style1-alt">
+			<div class="inner">
+				<ul class="menu">
+					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Creator: <a href="https://github.com/BolverBlitz">BolverBlitz</a></li><li>Projekt: <a href="https://github.com/EBG-PW/Endegs-AnlagenMonitor">Github</a></li><li>Impressum und Datenschutz: <a href="http://localhost:7500/lawstuff">Hier</a></li>
+				</ul>
+			</div>
+		</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+	</body>
+</html>
