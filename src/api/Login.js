@@ -11,9 +11,9 @@ const PluginConfig = {
 };
 
 /* Plugin info */
-const PluginName = 'Login';
+const PluginName = 'STT-Login';
 const PluginRequirements = [];
-const PluginVersion = '0.0.1';
+const PluginVersion = '0.1.2';
 const PluginAuthor = 'BolverBlitz';
 const PluginDocs = '';
 

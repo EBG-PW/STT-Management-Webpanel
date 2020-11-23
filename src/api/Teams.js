@@ -8,7 +8,7 @@ const PluginConfig = {
 };
 
 /* Plugin info */
-const PluginName = 'AnlagenScanner';
+const PluginName = 'STT-Teams';
 const PluginRequirements = [];
 const PluginVersion = '0.0.1';
 const PluginAuthor = 'BolverBlitz';
@@ -79,7 +79,7 @@ router.get('/EventMembers', RequestList, async (reg, res, next) => {
     const value = await GetEventMembers.validateAsync(reg.query);
     const allow = await isAllowed(value.Token, "TeamRead");
     if(allow){
-      pool.query('SELECT clash_id, clash_participation.discord_id, top, jgl, mid, adc, sup, main, ls."profileIconId", ls."summonerName"FROM clash_participation inner join league_player lp on clash_participation.discord_id = lp.discord_id inner join leaguesummoner ls on clash_participation.discord_id = ls.discord_id WHERE ls."PrimaryAcc" = True AND "participationTime" = $1;', [value.EventTime], (err, result) => { //GET Members of Event
+      pool.query('SELECT clash_id, clash_participation.discord_id, top, jgl, mid, adc, sup, main, ls."profileIconId", ls."summonerName" FROM clash_participation inner join league_player lp on clash_participation.discord_id = lp.discord_id inner join leaguesummoner ls on clash_participation.discord_id = ls.discord_id WHERE ls."PrimaryAcc" = True AND "participationTime" = $1;', [value.EventTime], (err, result) => { //GET Members of Event
         if (err) {
           res.status(503);
           res.json({

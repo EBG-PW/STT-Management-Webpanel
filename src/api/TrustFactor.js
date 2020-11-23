@@ -8,9 +8,9 @@ const PluginConfig = {
 };
 
 /* Plugin info */
-const PluginName = 'TrustFactor';
+const PluginName = 'STT-TrustFactor';
 const PluginRequirements = [];
-const PluginVersion = '0.0.1';
+const PluginVersion = '0.1.0';
 const PluginAuthor = 'BolverBlitz';
 const PluginDocs = '';
 

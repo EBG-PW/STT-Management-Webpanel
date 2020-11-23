@@ -201,7 +201,7 @@
 		<section id="Liste" class="wrapper style3 fade-up">
 			<div class="inner">
 				<div id="EventSelector"></div>
-				<h2 id="NoPermissions">Für Event angemeltet:</h2>
+				<h2 id="NoPermissions"></h2>
 				<div id="TeamsList"></div>
 			</div>
 		</section>
@@ -255,19 +255,36 @@
 					});
 					posting.done(function(data) {
 						console.log(data)
-						var TableString =``
-						/*
-						data.eventlist.map(Events => {
+						var TableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Lanes</th></tr></thead>`
+						var TableString =`<div class="table-wrapper"><table>${TableHead}`
+						var TableEnd = `</table></div>`;
+
+						data.Memberlist.map(Member => {
+							Member.discord_id = `n${Member.discord_id}` //Convert Big Int to String for better handling...
 							let BothTimes = "";
-							Events.event_times.map(Time => {
-								BothTimes = `${BothTimes}<button type="button" id="SetEvent" onclick="SetEvent('${Time}')">${humanReadable(Time)}</button> `
-							});
+							let LanesString = "";
+							if(Member.adc === true){
+								LanesString = `${LanesString}<button type="button" id="adc" AddToTeam="('${Member.discord_id}','adc'')">ADC</button>`
+							}
+							if(Member.jgl === true){
+								LanesString = `${LanesString}<button type="button" id="jgl" AddToTeam="('${Member.discord_id}','jgl'')">JGL</button>`
+							}
+							if(Member.mid === true){
+								LanesString = `${LanesString}<button type="button" id="mid" AddToTeam="('${Member.discord_id}','mid'')">MID</button>`
+							}
+							if(Member.sup === true){
+								LanesString = `${LanesString}<button type="button" id="sup" AddToTeam="('${Member.discord_id}','sup'')">SUP</button>`
+							}
+							if(Member.top === true){
+								LanesString = `${LanesString}<button type="button" id="top" AddToTeam="('${Member.discord_id}','top'')">TOP</button>`
+							}
+
+							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>Ist ein Opfer</td><td>${LanesString}</td>`
 							TableString = `${TableString}${BothTimes}`
 							
 						});
-						*/
 
-						//$("#EventSelector").html("<h2>Zukünftige Events</h2>" + TableString + "<br><br>");
+						$("#TeamsList").html(`<h2>Angemeldete Spieler für ${humanReadable(localStorage.getItem('EventTime'))}</h2>${TableString}<br><br>`);
 					});
 
 					posting.fail(function(err) {
@@ -281,6 +298,13 @@
 							alert("Kritischer Fehler!")
 						}
 					});
+
+					//Functions
+					function humanReadable(time) {
+							let JStime = new Date(time*1000);
+							return JStime.toLocaleString().slice(0, -6) + " Uhr";;
+							
+						}
 				}
 			</script>
 	</body>
