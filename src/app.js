@@ -21,7 +21,7 @@ app.use(expressCspHeader({
   directives: {
       'default-src': [SELF],
       'script-src': [SELF, INLINE, 'somehost.com'],
-      'style-src': [SELF, 'mystyles.net'],
+      'style-src': [SELF, 'localhost:7500'],
       'img-src': ['data:', 'https://geodragon.geozukunft.at/'],
       'worker-src': [NONE],
       'block-all-mixed-content': true

@@ -263,23 +263,54 @@
 							Member.discord_id = `n${Member.discord_id}` //Convert Big Int to String for better handling...
 							let BothTimes = "";
 							let LanesString = "";
+
 							if(Member.adc === true){
-								LanesString = `${LanesString}<button type="button" id="adc" AddToTeam="('${Member.discord_id}','adc'')">ADC</button>`
+								if(Member.main === "ADC"){
+									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
+								}else{
+									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
+								}
+							}else{
+								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
 							}
 							if(Member.jgl === true){
-								LanesString = `${LanesString}<button type="button" id="jgl" AddToTeam="('${Member.discord_id}','jgl'')">JGL</button>`
+								if(Member.main === "JGL"){
+									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
+								}else{
+									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
+								}
+							}else{
+								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
 							}
 							if(Member.mid === true){
-								LanesString = `${LanesString}<button type="button" id="mid" AddToTeam="('${Member.discord_id}','mid'')">MID</button>`
+								if(Member.main === "MID"){
+									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
+								}else{
+									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
+								}
+							}else{
+								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
 							}
 							if(Member.sup === true){
-								LanesString = `${LanesString}<button type="button" id="sup" AddToTeam="('${Member.discord_id}','sup'')">SUP</button>`
+								if(Member.main === "SUP"){
+									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb> | `
+								}else{
+									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb> | `
+								}
+							}else{
+								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb> | `
 							}
-							if(Member.top === true){
-								LanesString = `${LanesString}<button type="button" id="top" AddToTeam="('${Member.discord_id}','top'')">TOP</button>`
+							if(Member.sup === true){
+								if(Member.main === "TOP"){
+									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb>`
+								}else{
+									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb>`
+								}
+							}else{
+								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb>`
 							}
 
-							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>Ist ein Opfer</td><td>${LanesString}</td>`
+							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td>${LanesString}</td>`
 							TableString = `${TableString}${BothTimes}`
 							
 						});
