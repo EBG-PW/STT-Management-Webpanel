@@ -79,7 +79,7 @@
 									var TableString =`<div class="table-wrapper"><table>${TableHead}`
 									var TableEnd = `</table></div>`;
 									
-									if(localStorage.getItem('TrustFactorSort') === "Score"){
+								if(localStorage.getItem('TrustFactorSort') === "Score"){
 									data.memberlist.sort((a, b) => (a.trustfactor > b.trustfactor) ? -1 : 1)
 									$("#containerButton").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
 								}else{
