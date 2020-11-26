@@ -255,7 +255,6 @@
 						EventTime: EventTime
 					});
 					posting.done(function(data) {
-						console.log(data)
 						var TableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Lanes</th></tr></thead>`
 						var TableString =`<div class="table-wrapper"><table>${TableHead}`
 						var TableEnd = `</table></div>`;
@@ -354,6 +353,7 @@
 						}
 				}
 			</script>
+
 			<script>
 				function SortChance() {
 					if(localStorage.getItem('TeamsSort') === "Score"){
@@ -363,9 +363,8 @@
 					}else{
 						localStorage.setItem('TeamsSort', "Score")
 						createEventPlayerList()
-						$("#TeamsListSort").html(`<button type="button" id="SortChance" onclick="SortChance()">Name</button>`);
+						$("#TeamsListSort").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
 					}
-				}
 					
 					function createEventPlayerList() {
 					var EventTime = localStorage.getItem('EventTime')
@@ -378,107 +377,107 @@
 					}
 
 					var posting = $.get("http://localhost:7500/api/v1/Teams/EventMembers", {
-						Token: Token,
-						EventTime: EventTime
-					});
-					posting.done(function(data) {
-						console.log(data)
-						var TableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Lanes</th></tr></thead>`
-						var TableString =`<div class="table-wrapper"><table>${TableHead}`
-						var TableEnd = `</table></div>`;
-
-						if(localStorage.getItem('TeamSort') === "Score"){
-									data.Memberlist.sort((a, b) => (a.trustfactor > b.trustfactor) ? -1 : 1)
-									$("#TeamsListSort").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
-								}else{
-									data.Memberlist.sort(function(a, b){
-										var nameA=a.summonerName.toLowerCase(), nameB=b.summonerName.toLowerCase();
-										if (nameA < nameB) //sort string ascending
-										return -1;
-										if (nameA > nameB)
-										return 1;
-										return 0; //default return value (no sorting)
+									Token: Token,
+									EventTime: EventTime
 									});
-									$("#TeamsListSort").html(`<button type="button" id="SortChance" onclick="SortChance()">Alphabetisch</button>`);
-								}
+								posting.done(function(data) {
+									var TableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Lanes</th></tr></thead>`
+									var TableString =`<div class="table-wrapper"><table>${TableHead}`
+									var TableEnd = `</table></div>`;
 
-						data.Memberlist.map(Member => {
-							Member.discord_id = `n${Member.discord_id}` //Convert Big Int to String for better handling...
-							let BothTimes = "";
-							let LanesString = "";
+									if(localStorage.getItem('TeamsSort') === "Score"){
+												data.Memberlist.sort((a, b) => (a.trustfactor > b.trustfactor) ? -1 : 1)
+												$("#TeamsListSort").html(`<button type="button" id="SortChance" onclick="SortChance()">Trustfactor</button>`);
+											}else{
+												data.Memberlist.sort(function(a, b){
+													var nameA=a.summonerName.toLowerCase(), nameB=b.summonerName.toLowerCase();
+													if (nameA < nameB) //sort string ascending
+													return -1;
+													if (nameA > nameB)
+													return 1;
+													return 0; //default return value (no sorting)
+												});
+												$("#TeamsListSort").html(`<button type="button" id="SortChance" onclick="SortChance()">Alphabetisch</button>`);
+											}
 
-							if(Member.sup === true){
-								if(Member.main === "TOP"){
-									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb> | `
-								}else{
-									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb> | `
-								}
-							}else{
-								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb> | `
-							}
-							if(Member.jgl === true){
-								if(Member.main === "JGL"){
-									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
-								}else{
-									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
-								}
-							}else{
-								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
-							}
-							if(Member.mid === true){
-								if(Member.main === "MID"){
-									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
-								}else{
-									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
-								}
-							}else{
-								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
-							}
-							if(Member.adc === true){
-								if(Member.main === "ADC"){
-									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
-								}else{
-									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
-								}
-							}else{
-								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
-							}
-							if(Member.sup === true){
-								if(Member.main === "SUP"){
-									LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb>`
-								}else{
-									LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb>`
-								}
-							}else{
-								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb>`
-							}
+									data.Memberlist.map(Member => {
+										Member.discord_id = `n${Member.discord_id}` //Convert Big Int to String for better handling...
+										let BothTimes = "";
+										let LanesString = "";
 
-							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td>${LanesString}</td>`
-							TableString = `${TableString}${BothTimes}`
-							
-						});
+										if(Member.sup === true){
+											if(Member.main === "TOP"){
+												LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb> | `
+											}else{
+												LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb> | `
+											}
+										}else{
+											LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="top" onclick="AddToTeam('${Member.discord_id}','top')">TOP</buttonb> | `
+										}
+										if(Member.jgl === true){
+											if(Member.main === "JGL"){
+												LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
+											}else{
+												LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
+											}
+										}else{
+											LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="jgl" onclick="AddToTeam('${Member.discord_id}','jgl')">JGL</buttonb> | `
+										}
+										if(Member.mid === true){
+											if(Member.main === "MID"){
+												LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
+											}else{
+												LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
+											}
+										}else{
+											LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="mid" onclick="AddToTeam('${Member.discord_id}','mid')">MID</buttonb> | `
+										}
+										if(Member.adc === true){
+											if(Member.main === "ADC"){
+												LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
+											}else{
+												LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
+											}
+										}else{
+											LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="adc" onclick="AddToTeam('${Member.discord_id}','adc')">ADC</buttonb> | `
+										}
+										if(Member.sup === true){
+											if(Member.main === "SUP"){
+												LanesString = `${LanesString}<buttonb type="button" style="color: #00ff22 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb>`
+											}else{
+												LanesString = `${LanesString}<buttonb type="button" style="color: #f6fa00 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb>`
+											}
+										}else{
+											LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="sup" onclick="AddToTeam('${Member.discord_id}','sup')">SUP</buttonb>`
+										}
 
-						$("#TeamsList").html(`<h2>Angemeldete Spieler für ${humanReadable(localStorage.getItem('EventTime'))}</h2>${TableString}<br><br>`);
-					});
+										BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td>${LanesString}</td>`
+										TableString = `${TableString}${BothTimes}`
+										
+									});
 
-					posting.fail(function(err) {
-						if(err.status === 403){
-							$("#TeamsList").html("Nicht genügend Rechte!");
-							$('#TeamsList').addClass("highlight");
-							setTimeout(function () {
-								$('#TeamsList').removeClass('highlight');
-							}, 2000);
-						}else if(err.status === 503){
-							alert("Kritischer Fehler!")
-						}
-					});
+									$("#TeamsList").html(`<h2>Angemeldete Spieler für ${humanReadable(localStorage.getItem('EventTime'))}</h2>${TableString}<br><br>`);
+								});
 
-					//Functions
-					function humanReadable(time) {
-							let JStime = new Date(time*1000);
-							return JStime.toLocaleString().slice(0, -6) + " Uhr";;
-							
-						}
+								posting.fail(function(err) {
+									if(err.status === 403){
+										$("#TeamsList").html("Nicht genügend Rechte!");
+										$('#TeamsList').addClass("highlight");
+										setTimeout(function () {
+											$('#TeamsList').removeClass('highlight');
+										}, 2000);
+									}else if(err.status === 503){
+										alert("Kritischer Fehler!")
+									}
+								});
+
+								//Functions
+								function humanReadable(time) {
+										let JStime = new Date(time*1000);
+										return JStime.toLocaleString().slice(0, -6) + " Uhr";;
+										
+								}
+					}
 				}
 			</script>
 	</body>
