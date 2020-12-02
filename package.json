@@ -10,6 +10,7 @@
     "dev": "nodemon ./src/index.js",
     "pw": "node ./scrips/passwort_hasher.js",
     "rights": "node ./scrips/modify_rights.js",
+    "reg": "node ./scrips/register_user",
     "all": "npm i && clear && node ./scrips/create_env.js && node ./scrips/build_html.js && clear && node ./src/index.js",
     "all-win": "npm i && cls && node ./scrips/create_env.js && node ./scrips/build_html.js && cls && node ./src/index.js"
   },
