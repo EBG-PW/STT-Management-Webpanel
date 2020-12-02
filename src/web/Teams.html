@@ -257,7 +257,7 @@
 						EventTime: EventTime
 					});
 					posting.done(function(data) {
-						var TableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Lanes</th></tr></thead>`
+						var TableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Rank</th><th>Lanes</th></tr></thead>`
 						var TableString =`<div class="table-wrapper"><table>${TableHead}`
 						var TableEnd = `</table></div>`;
 
@@ -277,6 +277,7 @@
 								}
 
 						data.Memberlist.map(Member => {
+							console.log(Member)
 							Member.discord_id = `n${Member.discord_id}` //Convert Big Int to String for better handling...
 							let BothTimes = "";
 							let LanesString = "";
@@ -327,7 +328,7 @@
 								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="sup" onclick="AddToTeam({iconID: '${Member.profileIconId}', trustfactor: '${Member.trustfactor}', name: '${Member.summonerName}', discordID: '${Member.discord_id}', lane: 'sup'})">SUP</buttonb>`
 							}
 
-							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td>${LanesString}</td>`
+							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td>${Member.rank}</td><td>${LanesString}</td>`
 							TableString = `${TableString}${BothTimes}`
 							
 						});
@@ -469,14 +470,14 @@
 											$('#TeamsList').removeClass('highlight');
 										}, 2000);
 									}else if(err.status === 503){
-										alert("Kritischer Fehler!")
+										alert("Kritischer Fehler!");
 									}
 								});
 
 								//Functions
 								function humanReadable(time) {
 										let JStime = new Date(time*1000);
-										return JStime.toLocaleString().slice(0, -6) + " Uhr";;
+										return JStime.toLocaleString().slice(0, -6) + " Uhr";
 										
 								}
 					}
@@ -488,7 +489,8 @@
 					
 					let TeamEinsStore = localStorage.getItem('TeamsMemberCount')
 					if(TeamEinsStore > 0){
-						//TeamEinsStore.push(nDiscordID)
+						var MemberListArray = localStorage.getItem('TeamsMemberList').split(",")
+						//if()
 					}else{
 						localStorage.setItem('TeamsMemberCount', Number(localStorage.getItem('TeamsMemberCount') + 1))
 						localStorage.setItem('TeamsMemberList', `${discordID}.${iconID}.${lane}.${name}.${trustfactor},`)
