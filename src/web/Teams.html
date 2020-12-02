@@ -328,7 +328,7 @@
 								LanesString = `${LanesString}<buttonb type="button" style="color: #ff0000 !important;" id="sup" onclick="AddToTeam({iconID: '${Member.profileIconId}', trustfactor: '${Member.trustfactor}', name: '${Member.summonerName}', discordID: '${Member.discord_id}', lane: 'sup'})">SUP</buttonb>`
 							}
 
-							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td>${Member.rank}</td><td>${LanesString}</td>`
+							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td><div style="color: ${GetRankColor(Member.rank)} !important;">${Member.rank}</div></td><td>${LanesString}</td>`
 							TableString = `${TableString}${BothTimes}`
 							
 						});
@@ -350,10 +350,36 @@
 
 					//Functions
 					function humanReadable(time) {
-							let JStime = new Date(time*1000);
-							return JStime.toLocaleString().slice(0, -6) + " Uhr";;
+						let JStime = new Date(time*1000);
+						return JStime.toLocaleString().slice(0, -6) + " Uhr";;
 							
+					}
+
+					function GetRankColor(rank) {
+						if(rank.includes("Iron")){
+							return "#a19d94";
+						}else if(rank.includes("Bronze")){
+							return "#b08d57";
+						}else if(rank.includes("Silver")){
+							return "#C0C0C0";
+						}else if(rank.includes("Gold")){
+							return "#CFB53B";
+						}else if(rank.includes("Platinum")){
+							return "#6699ff";
+						}else if(rank.includes("Diamond")){
+							return "#b9f2ff";
+						}else if(rank.includes("Grandmaster")){
+							return "#8B0000";
+						}else if(rank.includes("Master")){
+							return "#6a0dad";
+						}else if(rank.includes("Challenger")){
+							return "#E0FFFF";
+						}else if(rank.includes("Gott")){
+							return "#cc3300";
+						}else{
+							return "#000000"
 						}
+					}
 				}
 			</script>
 
