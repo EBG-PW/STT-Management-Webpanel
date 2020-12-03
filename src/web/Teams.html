@@ -568,13 +568,30 @@
 							localStorage.setItem('TeamsMemberCount', Number(localStorage.getItem('TeamsMemberCount')) + 1)
 							localStorage.setItem('TeamsMemberList', `${localStorage.getItem('TeamsMemberList')}${getTeamID(localStorage.getItem('TeamsMemberCount'))}.${discordID}.${iconID}.${lane}.${name}.${trustfactor}.${rank},`)
 						}
-						console.log(localStorage.getItem('TeamsMemberList'))
+						//console.log(localStorage.getItem('TeamsMemberList'))
 						createEventPlayerList();
 					}else{
 						localStorage.setItem('TeamsMemberCount', Number(localStorage.getItem('TeamsMemberCount')) + 1)
 						localStorage.setItem('TeamsMemberList', `${getTeamID(localStorage.getItem('TeamsMemberCount'))}.${discordID}.${iconID}.${lane}.${name}.${trustfactor}.${rank},`)
 						createEventPlayerList();
 					}
+				}
+
+				function RemoveFromTeam(discordID){
+					let ListArray = localStorage.getItem('TeamsMemberList').split(",");
+					let MemberPointer = 0
+					ListArray.map(MemberList => {
+						MemberList = MemberList.split(".");
+						//console.log(MemberList)
+						if(MemberList[1] === discordID){
+							ListArray.splice(MemberPointer, 1)
+						}
+						MemberPointer = MemberPointer + 1;
+					});
+					localStorage.setItem('TeamsMemberList', saveArrayToString(ListArray))
+					localStorage.setItem('TeamsMemberCount', Number(localStorage.getItem('TeamsMemberCount')) - 1)
+					createEventPlayerList();
+				}
 					
 					//console.log(discordID, iconID, lane, name, trustfactor)
 
@@ -634,7 +651,6 @@
 											}
 										});
 										if(MemberList.length > 1){
-											console.log(MemberList)
 											if(Number(TeamPointer) === Number(MemberList[0])){
 												var Buttons = `<buttonb type="button" style="color: #ff0000 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
 												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
@@ -759,13 +775,23 @@
 									}
 								}
 					}
-				}
 
 				//Helper Funktions
 				function getTeamID(MemberCount) {
 					let Zahl = Math.floor((MemberCount/5)-0.1)
-					console.log(MemberCount, Zahl)
 					return Zahl;
+				}
+
+				function saveArrayToString(arr) {
+					var out = "";
+					arr.map(Member => {
+						Member = Member.split(".")
+						console.log(Member.length > 0, Member.length)
+						if(Member.length > 1){
+							out = `${out}${Member[0]}.${Member[1]}.${Member[2]}.${Member[3]}.${Member[4]}.${Member[5]}.${Member[6]},`
+						}
+					});
+					return out;
 				}
 			</script>
 	</body>
