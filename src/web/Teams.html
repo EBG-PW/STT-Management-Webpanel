@@ -208,7 +208,7 @@
 		</section>
 
 		<!-- ZusammengestelltesTeam -->
-		<section id="Events" class="wrapper style1 fade-up">
+		<section id="Events" class="wrapper style2-alt fade-up">
 			<div class="inner">
 				<h2>Team:</h2>
 				<p>Liste der aktuellen Spielerauswahl</p>
@@ -617,6 +617,13 @@
 									});
 
 									let ListArray = localStorage.getItem('TeamsMemberList').split(",");
+
+									/* Table Var for Teams Table below main Table */
+									var TeamsTableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Rank</th><th>Lane</th></tr></thead>`
+									var TeamsTableString =`<div id="TeamsTable0" class="table-wrapper"><table>${TeamsTableHead}`
+									var TeamsTableEnd = `</table></div>`;
+									var TeamsTableMember = "<p>Team 1:</p>";
+									var TeamPointer = 0; //Var um Team änderungen im Array zu finden um die Tabelle abzuschließen
 									ListArray.map(MemberList => {
 										MemberList = MemberList.split(".");
 										var Pointer = -1;
@@ -626,9 +633,23 @@
 												data.Memberlist.splice(Pointer, 1);
 											}
 										});
-
+										if(MemberList.length > 1){
+											console.log(MemberList)
+											if(Number(TeamPointer) === Number(MemberList[0])){
+												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td>`
+											}else{
+												console.log("Neues Team now!")
+												TeamPointer = TeamPointer + 1;
+												var FirstTableMember = `<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td>`
+												
+												var TeamsTableStringAppend =`<div id="TeamsTable${TeamPointer} class="table-wrapper"><table>${TeamsTableHead}`
+												
+													TeamsTableMember = `${TeamsTableMember}${TeamsTableEnd}<br><br><p>Team ${TeamPointer+1}:</p>${TeamsTableStringAppend}${FirstTableMember}`
+											}
+										}
 
 									});
+									TeamsTableString = `${TeamsTableString}${TeamsTableMember}`
 
 									data.Memberlist.map(Member => {
 										//Member.discord_id = `n${Member.discord_id}` //Convert Big Int to String for better handling...
@@ -687,6 +708,8 @@
 									});
 
 									$("#TeamsList").html(`<h2>Angemeldete Spieler für ${humanReadable(localStorage.getItem('EventTime'))}</h2>${TableString}<br><br>`);
+									$("#TeamSpielerListe").html(`${TeamsTableString}`);
+									
 								});
 
 								posting.fail(function(err) {
