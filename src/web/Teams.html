@@ -619,7 +619,7 @@
 									let ListArray = localStorage.getItem('TeamsMemberList').split(",");
 
 									/* Table Var for Teams Table below main Table */
-									var TeamsTableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Rank</th><th>Lane</th></tr></thead>`
+									var TeamsTableHead = `<thead><tr><th>Bild</th><th>Username</th><th>Clashscore</th><th>Rank</th><th>Lane</th><th>Actions</th></tr></thead>`
 									var TeamsTableString =`<div id="TeamsTable0" class="table-wrapper"><table>${TeamsTableHead}`
 									var TeamsTableEnd = `</table></div>`;
 									var TeamsTableMember = "<p>Team 1:</p>";
@@ -636,11 +636,13 @@
 										if(MemberList.length > 1){
 											console.log(MemberList)
 											if(Number(TeamPointer) === Number(MemberList[0])){
-												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td>`
+												var Buttons = `<buttonb type="button" style="color: #ff0000 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
+												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
 											}else{
 												console.log("Neues Team now!")
 												TeamPointer = TeamPointer + 1;
-												var FirstTableMember = `<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td>`
+												var Buttons = `<buttonb type="button" style="color: #ff0000 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
+												var FirstTableMember = `<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
 												
 												var TeamsTableStringAppend =`<div id="TeamsTable${TeamPointer} class="table-wrapper"><table>${TeamsTableHead}`
 												
