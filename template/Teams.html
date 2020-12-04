@@ -89,10 +89,10 @@
 
 								posting.fail(function(err) {
 									if(err.status === 403){
-										$("#ClashScoreList").html("Nicht genügend Rechte!");
-										$('#ClashScoreList').addClass("highlight");
+										$("#TeamsList").html("Nicht genügend Rechte!");
+										$('#TeamsList').addClass("highlight");
 										setTimeout(function () {
-											$('#ClashScoreList').removeClass('highlight');
+											$('#TeamsList').removeClass('highlight');
 										}, 2000);
 									}else if(err.status === 503){
 										alert("Kritischer Fehler!")
