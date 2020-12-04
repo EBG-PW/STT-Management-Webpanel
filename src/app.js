@@ -29,7 +29,10 @@ app.use(expressCspHeader({
 }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use('/', express.static('./src/web'))
+//app.use('/', express.static('./src/web'))
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/html/index.html'));
+});
 
 app.get('/lawstuff', (req, res) => {
   res.sendFile(path.join(`${__dirname}/html/lawstuff.html`));
