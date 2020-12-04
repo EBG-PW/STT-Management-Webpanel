@@ -54,7 +54,7 @@
 
 				function check(Token) {
 					return new Promise(function(resolve, reject) {
-						var posting = $.post("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/check", {
+						var posting = $.post("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/check", {
 							Token: Token
 						});
 						posting.done(function(data) {
@@ -114,7 +114,7 @@
 
 					function Requestlogout(Token) {
 					return new Promise(function(resolve, reject) {
-						var posting = $.post("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/logout", {
+						var posting = $.post("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/logout", {
 							Token: Token
 						});
 						posting.done(function(data) {
@@ -157,7 +157,7 @@
 					<div class="split style1" style="width:2000px; margin:0 auto;">
 						<section>
 							<div id="form-container"> 
-								<form id="cform" action="http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/login">
+								<form id="cform" action="REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/login">
 									<div class="fields">
 										<div class="field half">
 											<label for="Nutzername">Nutzername</label>
@@ -220,7 +220,7 @@
 
 										function check(Token) {
 											return new Promise(function(resolve, reject) {
-												var posting = $.post("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/check", {
+												var posting = $.post("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/check", {
 													Token: Token
 												});
 												posting.done(function(data) {
@@ -343,7 +343,7 @@
 		<footer id="footer" class="wrapper style1-alt">
 			<div class="inner">
 				<ul class="menu">
-					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Creator: <a href="https://github.com/BolverBlitz">BolverBlitz</a></li><li>Projekt: <a href="https://github.com/EBG-PW/Endegs-AnlagenMonitor">Github</a></li><li>Impressum und Datenschutz: <a href="http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/lawstuff">Hier</a></li>
+					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="REPLACE_THIS_WITH_BACKEND_PROTOKOL://html5up.net">HTML5 UP</a></li><li>Creator: <a href="https://github.com/BolverBlitz">BolverBlitz</a></li><li>Projekt: <a href="https://github.com/EBG-PW/Endegs-AnlagenMonitor">Github</a></li><li>Impressum und Datenschutz: <a href="REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/lawstuff">Hier</a></li>
 				</ul>
 			</div>
 		</footer>

@@ -71,7 +71,7 @@
 							}else{
 								var Token = "No Token"
 							}
-							var posting = $.get("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/getList", {
+							var posting = $.get("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/getList", {
 									Token: Token
 								});
 								posting.done(function(data) {
@@ -118,7 +118,7 @@
 						//Functions for Check Permissions and create Header
 						function check(Token) {
 							return new Promise(function(resolve, reject) {
-								var posting = $.post("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/check", {
+								var posting = $.post("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/check", {
 									Token: Token
 								});
 								posting.done(function(data) {
@@ -153,7 +153,7 @@
 					}else{
 						var Token = "No Token"
 					}
-					var posting = $.post("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/modifyTrust", {
+					var posting = $.post("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/modifyTrust", {
 						DiscordID: Input.DiscordID,
 						Value: Input.Value,
 						Token: Token
@@ -196,7 +196,7 @@
 							}else{
 								var Token = "No Token"
 							}
-							var posting = $.get("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/getList", {
+							var posting = $.get("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/getList", {
 									Token: Token
 								});
 					posting.done(function(data) {
@@ -260,7 +260,7 @@
 							}else{
 								var Token = "No Token"
 							}
-							var posting = $.get("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/getList", {
+							var posting = $.get("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/TrustFactor/getList", {
 									Token: Token
 								});
 							posting.done(function(data) {
@@ -339,7 +339,7 @@
 	
 						function Requestlogout(Token) {
 						return new Promise(function(resolve, reject) {
-							var posting = $.post("http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/logout", {
+							var posting = $.post("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Login/logout", {
 								Token: Token
 							});
 							posting.done(function(data) {
@@ -378,7 +378,7 @@
 		<footer id="footer" class="wrapper style1-alt">
 			<div class="inner">
 				<ul class="menu">
-					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Creator: <a href="https://github.com/BolverBlitz">BolverBlitz</a></li><li>Projekt: <a href="https://github.com/EBG-PW/Endegs-AnlagenMonitor">Github</a></li><li>Impressum und Datenschutz: <a href="http://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/lawstuff">Hier</a></li>
+					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="REPLACE_THIS_WITH_BACKEND_PROTOKOL://html5up.net">HTML5 UP</a></li><li>Creator: <a href="https://github.com/BolverBlitz">BolverBlitz</a></li><li>Projekt: <a href="https://github.com/EBG-PW/Endegs-AnlagenMonitor">Github</a></li><li>Impressum und Datenschutz: <a href="REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/lawstuff">Hier</a></li>
 				</ul>
 			</div>
 		</footer>
