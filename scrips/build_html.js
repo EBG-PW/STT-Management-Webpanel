@@ -6,7 +6,7 @@ function CreateHTML(htmlname){
     
     //Insert IP and PORT
     var FertigHTML = Vorlage.split("REPLACE_THIS_WITH_BACKEND_IP").join(process.env.IP)
-    FertigHTML = FertigHTML.split("REPLACE_THIS_WITH_BACKEND_PORT").join(process.env.PORT)
+    FertigHTML = FertigHTML.split("REPLACE_THIS_WITH_BACKEND_PORT").join(process.env.BuildPort)
     FertigHTML = FertigHTML.split("REPLACE_THIS_WITH_BACKEND_PROTOKOL").join(process.env.HTTP)
 
     console.log(`${htmlname} was build:\nIP: ${process.env.IP}\nPort: ${process.env.PORT}`)
