@@ -652,6 +652,10 @@
 										});
 										if(MemberList.length > 1){
 											if(Number(TeamPointer) === Number(MemberList[0])){
+												var UPDownButtons = "";
+												if(TeamPointer === 0){
+													//Nur hoch pfeil
+												}
 												var Buttons = `<buttonb type="button" style="color: #ff0000 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
 												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
 											}else{
@@ -727,6 +731,7 @@
 
 									$("#TeamsList").html(`<h2>Angemeldete Spieler für ${humanReadable(localStorage.getItem('EventTime'))}</h2>${TableString}<br><br>`);
 									$("#TeamSpielerListe").html(`${TeamsTableString}`);
+
 									
 								});
 
@@ -792,6 +797,12 @@
 						}
 					});
 					return out;
+				}
+
+				function sortDataArrayByTeam(arr) {
+					console.log(arr[0].charAt(0))
+					arr.sort((a, b) => (a.charAt(0) > b.charAt(0)) ? 1 : -1)
+					return arr;
 				}
 			</script>
 	</body>
