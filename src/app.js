@@ -12,7 +12,7 @@ const middlewares = require('./middlewares');
 const api = require('./api');
 
 const app = express();
-//app.set('trust proxy', 1); // If Behind PROXY
+app.set('trust proxy', 1); // If Behind PROXY
 
 app.use(morgan('dev'));
 app.use(helmet());
