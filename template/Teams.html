@@ -129,7 +129,7 @@
 								if(rights){
 									if(rights.includes("TeamRead")){ HeaderHTML += `<li><a href="Teams.html" class="active">Teams</a></li>` }
 									if(rights.includes("TrustRead")){ HeaderHTML += `<li><a href="TrustFactor.html">Clashscore</a></li>` }
-									if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
+									//if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
 								}
 								HeaderHTML += `<li><p id="logout" onclick="logout()">Ausloggen</p></li>`
 							$("#LinksList").html(HeaderHTML);
@@ -189,7 +189,7 @@
 								if(rights){
 									if(rights.includes("TeamRead")){ HeaderHTML += `<li><a href="Teams.html" class="active">Teams</a></li>` }
 									if(rights.includes("TrustRead")){ HeaderHTML += `<li><a href="TrustFactor.html">Clashscore</a></li>` }
-									if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
+									//if(rights.includes("ReadUser")){ HeaderHTML += `<li><a href="ModifyUser.html">Benutzerverwaltung</a></li>` }
 								}
 								HeaderHTML += `<li><p id="logout" onclick="logout()">Ausloggen</p></li>`
 							$("#LinksList").html(HeaderHTML);
