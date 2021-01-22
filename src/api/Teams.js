@@ -44,6 +44,13 @@ const GetEventMembers = Joi.object({
   EventTime: Joi.number().required(),
 });
 
+const SaveUsers = Joi.object({
+  Token: Joi.string().required().max(32),
+	EventTime: Joi.number().required(),
+	TeamsMemberCount: Joi.number().required(),
+	TeamsMemberList: Joi.string().required(),
+});
+
 router.get('/currentEvents', RequestList, async (reg, res, next) => {
   try {
     const value = await GetTrustList.validateAsync(reg.query);
@@ -79,7 +86,7 @@ router.get('/EventMembers', RequestList, async (reg, res, next) => {
     const value = await GetEventMembers.validateAsync(reg.query);
     const allow = await isAllowed(value.Token, "TeamRead");
     if(allow){
-      pool.query('SELECT clash_id, clash_participation.discord_id, top, jgl, mid, adc, sup, main, ls."profileIconId", ls."summonerName", ls."rank", m.trustfactor FROM clash_participation inner join league_player lp on clash_participation.discord_id = lp.discord_id inner join leaguesummoner ls on clash_participation.discord_id = ls.discord_id inner join members m on clash_participation.discord_id = m.discord_id WHERE ls."PrimaryAcc" = True AND "participationTime" = $1', [value.EventTime], (err, result) => { //GET Members of Event
+      pool.query('SELECT clash_id, clash_participation.discord_id, top, jgl, mid, adc, sup, main, ls."profileIconId", ls."summonerName", ls."tier", ls."rank", m.trustfactor FROM clash_participation inner join league_player lp on clash_participation.discord_id = lp.discord_id inner join leaguesummoner ls on clash_participation.discord_id = ls.discord_id inner join members m on clash_participation.discord_id = m.discord_id WHERE ls."PrimaryAcc" = True AND "participationTime" = $1', [value.EventTime], (err, result) => { //GET Members of Event
         if (err) {
           res.status(503);
           res.json({
@@ -87,11 +94,55 @@ router.get('/EventMembers', RequestList, async (reg, res, next) => {
             error: err.stack
           });
         }else{
+          console.log(result.rows)
+          result.rows.map(user => {
+            user.rank = `${user.tier}.${user.rank}`
+          })
           res.status(200);
           res.json({
             Memberlist: result.rows,
           });
         }
+      });
+    }else{
+      res.status(403);
+      res.json({
+        message: "Not enoth permissions",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/SaveTeams', RequestList, async (reg, res, next) => {
+  try {
+    const value = await SaveUsers.validateAsync(reg.query);
+    const allow = await isAllowed(value.Token, "TeamWrite");
+    if(allow){
+      let TeamsArray = [];
+      let TeamsMemberListArray = value.TeamsMemberList.split(",")
+      TeamsMemberListArray.map(element => {
+        element = element.split(".")
+        console.log(typeof(element[1]))
+        if(typeof(element[1]) !== "undefined"){
+          TeamsArray.push({
+            TeamID: element[0],
+            DiscordID: element[1],
+            IconID: element[2],
+            lane: element[3],
+            UserName: element[4],
+            ClashScore: element[5],
+            Rank: element[6]
+          });
+        }
+      })
+
+      console.log(TeamsArray)
+
+      res.status(200);
+      res.json({
+        succsess: true,
       });
     }else{
       res.status(403);
@@ -123,6 +174,10 @@ function isAllowed(token, rights) {
 
     });
   });
+}
+
+function isValidTeam(array) {
+
 }
 
 module.exports = {

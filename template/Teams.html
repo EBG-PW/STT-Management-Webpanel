@@ -214,6 +214,7 @@
 				<p>Liste der aktuellen Spielerauswahl</p>
 				<div id="TeamSpielerListe">
 				</div>
+				<button type="button" id="SaveTeams" onclick="SaveTeams()">Save Teams</button>
 			</div>
 		</section>
 
@@ -240,6 +241,42 @@
 					localStorage.setItem('TeamsMemberCount', "0")		
 					localStorage.setItem('TeamsMemberList', "")		
 					createEventPlayerList();
+				}
+
+				function SaveTeams() {
+					var EventTime = localStorage.getItem('EventTime');
+					if(sessionStorage.getItem('token')){
+						var Token = sessionStorage.getItem('token')
+					}else if(localStorage.getItem('token')){
+						var Token = localStorage.getItem('token');
+					}else{
+						var Token = "No Token"
+					}
+					var TeamsMemberList = localStorage.getItem('TeamsMemberList');
+					var TeamsMemberCount = localStorage.getItem('TeamsMemberCount');
+
+					var posting = $.get("REPLACE_THIS_WITH_BACKEND_PROTOKOL://REPLACE_THIS_WITH_BACKEND_IP:REPLACE_THIS_WITH_BACKEND_PORT/api/v1/Teams/SaveTeams", {
+						Token: Token,
+						EventTime: EventTime,
+						TeamsMemberCount: TeamsMemberCount,
+						TeamsMemberList: TeamsMemberList
+					});
+
+					posting.done(function(data) {
+						console.log(data);
+					});
+
+					posting.fail(function(err) {
+						if(err.status === 403){
+							$("#TeamsList").html("Nicht genügend Rechte!");
+							$('#TeamsList').addClass("highlight");
+							setTimeout(function () {
+								$('#TeamsList').removeClass('highlight');
+							}, 2000);
+						}else if(err.status === 503){
+							alert("Kritischer Fehler!")
+						}
+					});
 				}
 
 				function createEventPlayerList() {
