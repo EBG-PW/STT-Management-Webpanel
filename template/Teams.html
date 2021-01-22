@@ -641,6 +641,8 @@
 									var TeamsTableEnd = `</table></div>`;
 									var TeamsTableMember = "<p>Team 1:</p>";
 									var TeamPointer = 0; //Var um Team änderungen im Array zu finden um die Tabelle abzuschließen
+									var TLPointer = 0; //Track Teamleader
+									var isTL = false;
 									ListArray.map(MemberList => {
 										MemberList = MemberList.split(".");
 										var Pointer = -1;
@@ -650,18 +652,29 @@
 												data.Memberlist.splice(Pointer, 1);
 											}
 										});
+										if(Number(TLPointer) === Number(MemberList[0])){
+											TLPointer++
+											isTL = true
+										}
 										if(MemberList.length > 1){
 											if(Number(TeamPointer) === Number(MemberList[0])){
 												var UPDownButtons = "";
 												if(TeamPointer === 0){
 													//Nur hoch pfeil
 												}
-												var Buttons = `<buttonb type="button" style="color: #808080 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
+												var Buttons = `<buttonb type="button" style="color: #ff0000 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
+												if(isTL){
+													Buttons = `${Buttons}  TeamLead`
+													isTL = false
+												}
 												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
 											}else{
-												console.log("Neues Team now!")
 												TeamPointer = TeamPointer + 1;
-												var Buttons = `<buttonb type="button" style="color: #808080 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
+												var Buttons = `<buttonb type="button" style="color: #ff0000 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
+												if(isTL){
+													Buttons = `${Buttons}  TeamLead`
+													isTL = false
+												}
 												var FirstTableMember = `<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
 												
 												var TeamsTableStringAppend =`<div id="TeamsTable${TeamPointer} class="table-wrapper"><table>${TeamsTableHead}`
