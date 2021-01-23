@@ -96,7 +96,7 @@ router.get('/EventMembers', RequestList, async (reg, res, next) => {
         }else{
           console.log(result.rows)
           result.rows.map(user => {
-            user.rank = `${user.tier}.${user.rank}`
+            user.rank = `${user.tier}?${user.rank}`
           })
           res.status(200);
           res.json({
