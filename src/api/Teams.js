@@ -137,31 +137,24 @@ router.get('/SaveTeams', RequestList, async (reg, res, next) => {
       })
 
       isValidTeam(TeamsArray).then(function(succsess) {
-        let isTL = true
-        let TLCount = 0
-        /*
-        TeamsArray.map(element => {
-          TLCount++;
-          if(TLCount >= 6){
-            isTL = true
-          }
-          if(isTL){
-            element.isTL(true);
-          }else{
-            element.isTL(false);
-          }
-          element.DiscordID = element.DiscordID.substring(1, element.DiscordID.length);
-          console.log(element.UserName, isTL, TLCount)
-            isTL = false
-            TLCount = 0
-        });
-        console.log(TeamsArray)
+        var TLCount = 0
         
         TeamsArray.map(element => {
-          pool.query('UPDATE clash_participation SET team_id = $1 , lane = $2, teamlead = $3 WHERE discord_id = $4 AND "participationTime" = $5;', [element.TeamID, element.lane, isTL, element.DiscordID, value.EventTime], (err, result) => { 
+          if(TLCount === Number(element.TeamID)){
+            element.isTL = true;
+            TLCount++;
+          }else{
+            element.isTL = false;
+          }
+
+          element.DiscordID = element.DiscordID.substring(1, element.DiscordID.length);
+        });
+        
+        TeamsArray.map(element => {
+          pool.query('UPDATE clash_participation SET team_id = $1 , lane = $2, teamlead = $3 WHERE discord_id = $4 AND "participationTime" = $5;', [element.TeamID, element.lane, element.isTL, element.DiscordID, value.EventTime], (err, result) => { 
           });
         });
-        */
+        
         res.status(200);
         res.json({
           succsess: succsess,
