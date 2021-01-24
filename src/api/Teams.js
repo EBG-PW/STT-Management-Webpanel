@@ -94,7 +94,6 @@ router.get('/EventMembers', RequestList, async (reg, res, next) => {
             error: err.stack
           });
         }else{
-          console.log(result.rows)
           result.rows.map(user => {
             user.rank = `${user.tier}?${user.rank}`
           })
@@ -124,7 +123,6 @@ router.get('/SaveTeams', RequestList, async (reg, res, next) => {
       let TeamsMemberListArray = value.TeamsMemberList.split(",")
       TeamsMemberListArray.map(element => {
         element = element.split(".")
-        console.log(typeof(element[1]))
         if(typeof(element[1]) !== "undefined"){
           TeamsArray.push({
             TeamID: element[0],
@@ -138,12 +136,44 @@ router.get('/SaveTeams', RequestList, async (reg, res, next) => {
         }
       })
 
-      console.log(TeamsArray)
-
-      res.status(200);
-      res.json({
-        succsess: true,
+      isValidTeam(TeamsArray).then(function(succsess) {
+        let isTL = true
+        let TLCount = 0
+        /*
+        TeamsArray.map(element => {
+          TLCount++;
+          if(TLCount >= 6){
+            isTL = true
+          }
+          if(isTL){
+            element.isTL(true);
+          }else{
+            element.isTL(false);
+          }
+          element.DiscordID = element.DiscordID.substring(1, element.DiscordID.length);
+          console.log(element.UserName, isTL, TLCount)
+            isTL = false
+            TLCount = 0
+        });
+        console.log(TeamsArray)
+        
+        TeamsArray.map(element => {
+          pool.query('UPDATE clash_participation SET team_id = $1 , lane = $2, teamlead = $3 WHERE discord_id = $4 AND "participationTime" = $5;', [element.TeamID, element.lane, isTL, element.DiscordID, value.EventTime], (err, result) => { 
+          });
+        });
+        */
+        res.status(200);
+        res.json({
+          succsess: succsess,
+        });
+      }).catch(function(fail) {
+        res.status(400);
+        res.json({
+          messsage: fail,
+        });
       });
+
+      
     }else{
       res.status(403);
       res.json({
@@ -177,7 +207,45 @@ function isAllowed(token, rights) {
 }
 
 function isValidTeam(array) {
+  return new Promise(function(resolve, reject) {
+    a = groupBy(array, 'TeamID')
 
+    let Lanes = [];
+    for (const [key, value] of Object.entries(a)) {
+      if(value.length === 5){
+        Lanes = [];
+        value.map(e => {
+          Lanes.push(e.lane)
+        })
+        if(!Lanes.includes('top')){
+          reject(`${key} missing top`)
+        }
+        if(!Lanes.includes('jgl')){
+          reject(`${key} missing jgl`)
+        }
+        if(!Lanes.includes('mid')){
+          reject(`${key} missing mid`)
+        }
+        if(!Lanes.includes('adc')){
+          reject(`${key} missing adc`)
+        }
+        if(!Lanes.includes('sup')){
+          reject(`${key} missing sup`)
+        }
+      }else{
+        reject(`${key} not 5 members`)
+      }
+    }
+    resolve(true)
+  });
+}
+
+function groupBy(arr, property) {
+  return arr.reduce(function(memo, x) {
+    if (!memo[x[property]]) { memo[x[property]] = []; }
+    memo[x[property]].push(x);
+    return memo;
+  }, {});
 }
 
 module.exports = {

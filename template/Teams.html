@@ -263,11 +263,34 @@
 					});
 
 					posting.done(function(data) {
-						console.log(data);
+						alert(`Teams wurden gespeichert!`);
+						//location.reload();
 					});
 
 					posting.fail(function(err) {
-						if(err.status === 403){
+						console.log(err.responseJSON)
+						if(err.status === 400){
+							let m = err.responseJSON.messsage.split(" ")
+							if(err.responseJSON.messsage.endsWith("not 5 members")){
+								
+								alert(`Team ${m[0]} braucht 5 Spieler!`)
+
+								$(`#TeamsTable${m[0]}`).addClass("highlight");
+								setTimeout(function () {
+									$(`#TeamsTable${m[0]}`).removeClass('highlight');
+								}, 2000);
+							}
+
+							if(m[1] === "missing"){
+								
+								alert(`In Team ${m[0]} fehlt ein ${m[2]}`)
+
+								$(`#TeamsTable${m[0]}`).addClass("highlight");
+								setTimeout(function () {
+									$(`#TeamsTable${m[0]}`).removeClass('highlight');
+								}, 2000);
+							}
+						}else if(err.status === 403){
 							$("#TeamsList").html("Nicht genügend Rechte!");
 							$('#TeamsList').addClass("highlight");
 							setTimeout(function () {
