@@ -212,9 +212,9 @@
 			<div class="inner">
 				<h2>Team:</h2>
 				<p>Liste der aktuellen Spielerauswahl</p>
-				<div id="TeamSpielerListe">
-				</div>
-				<button type="button" id="SaveTeams" onclick="SaveTeams()">Save Teams</button>
+				<div id="TeamSpielerListe"></div>
+				<button type="button" id="SaveTeams" onclick="SaveTeams()">Save Teams</button><br>
+				<div id="SaveStatus"></div>
 			</div>
 		</section>
 
@@ -262,9 +262,16 @@
 						TeamsMemberList: TeamsMemberList
 					});
 
+					function humanReadable(time) {
+						let JStime = new Date(time*1000);
+						return JStime.toLocaleString().slice(0, -6) + " Uhr";;
+							
+					}
+
 					posting.done(function(data) {
-						alert(`Teams wurden gespeichert!`);
 						//location.reload();
+						$("#SaveStatus").html(``);
+						$("#TeamSpielerListe").html(`Teams für das Event ${humanReadable(localStorage.getItem('EventTime'))} wurden erfolgreich gespeichert!<br><br>`);
 					});
 
 					posting.fail(function(err) {
@@ -273,7 +280,8 @@
 							let m = err.responseJSON.messsage.split(" ")
 							if(err.responseJSON.messsage.endsWith("not 5 members")){
 								
-								alert(`Team ${m[0]} braucht 5 Spieler!`)
+								//alert(`Team ${m[0]} braucht 5 Spieler!`)
+								$("#SaveStatus").html(`<br>Team ${Number(m[0])+1} braucht 5 Spieler!`);
 
 								$(`#TeamsTable${m[0]}`).addClass("highlight");
 								setTimeout(function () {
@@ -283,7 +291,8 @@
 
 							if(m[1] === "missing"){
 								
-								alert(`In Team ${m[0]} fehlt ein ${m[2]}`)
+								//alert(`In Team ${m[0]} fehlt ein ${m[2]}`)
+								$("#SaveStatus").html(`<br>In Team ${Number(m[0])+1} fehlt ein ${m[2]}`);
 
 								$(`#TeamsTable${m[0]}`).addClass("highlight");
 								setTimeout(function () {
