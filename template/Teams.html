@@ -396,7 +396,7 @@
 								LanesString = `${LanesString}<buttonb type="button" style="color: #808080 !important;" id="sup" onclick="AddToTeam({iconID: '${Member.profileIconId}', trustfactor: '${Member.trustfactor}', name: '${Member.summonerName}', discordID: '${Member.discord_id}', rank: '${Member.rank}', lane: 'sup'})">SUP</buttonb>`
 							}
 
-							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td><div style="color: ${GetRankColor(Member.rank)} !important;">${FormatRank(Member.rank)}</div></td><td>${LanesString}</td>`
+							BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td><div style="color: ${GetRankColor(Member.rank)} !important;">${Member.rank}</div></td><td>${LanesString}</td>`
 							TableString = `${TableString}${BothTimes}`
 							
 						});
@@ -586,7 +586,7 @@
 											LanesString = `${LanesString}<buttonb type="button" style="color: #808080 !important;" id="sup" onclick="AddToTeam({iconID: '${Member.profileIconId}', trustfactor: '${Member.trustfactor}', name: '${Member.summonerName}', discordID: '${Member.discord_id}', rank: '${Member.rank}', lane: 'sup'})">SUP</buttonb>`
 										}
 
-										BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td><div style="color: ${GetRankColor(Member.rank)} !important;">${FormatRank(Member.rank)}</div></td><td>${LanesString}</td>`
+										BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td><div style="color: ${GetRankColor(Member.rank)} !important;">${Member.rank}</div></td><td>${LanesString}</td>`
 										TableString = `${TableString}${BothTimes}`
 										
 									});
@@ -780,7 +780,7 @@
 													Buttons = `${Buttons}  TeamLead`
 													isTL = false
 												}
-												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${FormatRank(MemberList[6])}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
+												TeamsTableMember = `${TeamsTableMember}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
 											}else{
 												TeamPointer = TeamPointer + 1;
 												var Buttons = `<buttonb type="button" style="color: #ff0000 !important;" onclick="RemoveFromTeam('${MemberList[1]}')">X</buttonb>`
@@ -788,7 +788,7 @@
 													Buttons = `${Buttons}  TeamLead`
 													isTL = false
 												}
-												var FirstTableMember = `<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${FormatRank(MemberList[6])}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
+												var FirstTableMember = `<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${MemberList[2]}.png" height=40 width=40></td></img><td>${MemberList[4]}</td><td>${MemberList[5]}</td><td><div style="color: ${GetRankColor(MemberList[6])} !important;">${MemberList[6]}</div></td><td>${MemberList[3]}</td><td>${Buttons}</td>`
 												
 												var TeamsTableStringAppend =`<div id="TeamsTable${TeamPointer} class="table-wrapper"><table>${TeamsTableHead}`
 												
@@ -850,7 +850,7 @@
 											LanesString = `${LanesString}<buttonb type="button" style="color: #808080 !important;" id="sup" onclick="AddToTeam({iconID: '${Member.profileIconId}', trustfactor: '${Member.trustfactor}', name: '${Member.summonerName}', discordID: '${Member.discord_id}', rank: '${Member.rank}', lane: 'sup'})">SUP</buttonb>`
 										}
 
-										BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td><div style="color: ${GetRankColor(Member.rank)} !important;">${FormatRank(Member.rank)}</div></td><td>${LanesString}</td>`
+										BothTimes = `${BothTimes}<tbody><tr><td><img src="https://geodragon.geozukunft.at/dragontail-10.23.1/10.23.1/img/profileicon/${Member.profileIconId}.png" height=40 width=40></td></img><td>${Member.summonerName}</td><td>${Member.trustfactor}</td><td><div style="color: ${GetRankColor(Member.rank)} !important;">${Member.rank}</div></td><td>${LanesString}</td>`
 										TableString = `${TableString}${BothTimes}`
 										
 									});
